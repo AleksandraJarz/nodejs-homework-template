@@ -1,14 +1,86 @@
-// const fs = require('fs/promises')
+const fs = require("fs/promises");
+const { v4: uuidv4 } = require("uuid");
+const path = require("path");
+const contactsPath = path.join(__dirname, "..", "models", "contacts.json");
 
-const listContacts = async () => {}
+const readContacts = async (pathFile) => {
+  const data = await fs.readFile(pathFile);
+  return JSON.parse(data);
+};
 
-const getContactById = async (contactId) => {}
+const writeContacts = async (newContacts, pathFile) => {
+  const data = JSON.stringify(newContacts);
+  await fs.writeFile(pathFile, data, "utf8");
+};
 
-const removeContact = async (contactId) => {}
+const listContacts = async () => {
+  try {
+    return await readContacts(contactsPath);
+  } catch (error) {
+    console.error("Error fetching contacts: ", error);
+    throw error;
+  }
+};
 
-const addContact = async (body) => {}
+const getContactById = async (contactId) => {
+  try {
+    const contacts = await readContacts(contactsPath);
+    return contacts.find((contact) => contact.id === contactId) || null;
+  } catch (error) {
+    console.error("Error fetching contacts: ", error);
+    throw error;
+  }
+};
 
-const updateContact = async (contactId, body) => {}
+const removeContact = async (contactId) => {
+  try {
+    const contacts = await readContacts(contactsPath);
+    const index = contacts.findIndex((contact) => contact.id === contactId);
+    if (index !== -1) {
+      contacts.splice(index, 1);
+      await writeContacts(contacts, contactsPath);
+      return "Contact deleted";
+    }
+    return "Contact not found. Please try again";
+  } catch (error) {
+    console.error("Error fetching contacts: ", error);
+    throw error;
+  }
+};
+
+const addContact = async (body) => {
+  try {
+    const contacts = await readContacts(contactsPath);
+    const newContact = {
+      id: uuidv4(),
+      ...body,
+    };
+    contacts.push(newContact);
+    await writeContacts(contacts, contactsPath);
+    return contacts;
+  } catch (error) {
+    console.error("Error fetching contacts: ", error);
+    throw error;
+  }
+};
+
+const updateContact = async (contactId, body) => {
+  try {
+    const contacts = await readContacts(contactsPath);
+    const index = contacts.findIndex((contact) => contact.id === contactId);
+    if (index !== -1) {
+      contacts[index] = { ...contacts[index], ...body };
+      await writeContacts(contacts, contactsPath);
+      return "Contact update";
+    } else {
+      addContact(body);
+      return "ok";
+    }
+  } catch (error) {
+    console.error("Error fetching contacts: ", error);
+    throw error;
+  }
+};
 
 module.exports = {
   listContacts,
@@ -16,4 +88,4 @@ module.exports = {
   removeContact,
   addContact,
   updateContact,
-}
+};
