@@ -34,7 +34,7 @@ const startServer = async () => {
     await connection;
     console.log("Database connected");
     app.listen(3000, () => {
-      console.log("Server started on http://localhost:8000");
+      console.log("Server started on http://localhost:3000");
     });
   } catch (err) {
     console.log(err);
