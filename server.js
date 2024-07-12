@@ -1,5 +1,4 @@
 const express = require("express");
-const logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const apiRouter = require("./api");
@@ -8,14 +7,11 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const { DB_HOST: urlDb } = process.env;
-console.log(urlDb);
+
 const connection = mongoose.connect(urlDb, { dbName: "test" });
 
 const app = express();
 
-const formatsLogger = app.get("env") === "development" ? "dev" : "short";
-
-app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
@@ -37,7 +33,7 @@ const startServer = async () => {
   try {
     await connection;
     console.log("Database connected");
-    app.listen(8000, () => {
+    app.listen(3000, () => {
       console.log("Server started on http://localhost:8000");
     });
   } catch (err) {
