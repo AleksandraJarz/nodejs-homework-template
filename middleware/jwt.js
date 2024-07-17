@@ -11,7 +11,7 @@ async function authMiddleware(req, res, next) {
         if (!user || err) {
           return res.status(401).json({ message: "Not authorized" });
         }
-        if (!user || token) {
+        if (!user.token) {
           return res
             .status(401)
             .json({ message: "Token expired or invalidated" });
@@ -30,4 +30,4 @@ async function authMiddleware(req, res, next) {
   }
 }
 
-module.exports - authMiddleware;
+module.exports = authMiddleware;
