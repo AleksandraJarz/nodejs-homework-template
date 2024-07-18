@@ -3,7 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const apiRouter = require("./api");
 const dotenv = require("dotenv");
-const jwtStrategy = require("./confIg/jwt");
+const JWTStrategy = require("./confIg/jwt");
 dotenv.config();
 
 const connection = mongoose.connect(
@@ -15,7 +15,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-jwtStrategy();
+JWTStrategy();
 
 app.use("/api", apiRouter);
 
