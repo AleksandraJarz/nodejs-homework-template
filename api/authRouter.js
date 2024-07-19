@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../models/user.js");
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
-const authMiddleware = require("../middleware/jwt.js");
+const authMiddleware = require("../middleware/jwt");
 
 const router = express.Router();
 
@@ -23,7 +23,7 @@ router.post("/signup", async (req, res, next) => {
   }
 
   const { email, password } = req.body;
-  const user = await User.findOne({ email }, { _id: 1 }).lean();
+  const user = await User.findOne({ email }).lean();
   if (user) {
     return res.status(409).json({ message: "Email in use" });
   }
