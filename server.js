@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const mongoose = require("mongoose");
 const apiRouter = require("./api");
 const dotenv = require("dotenv");
@@ -11,6 +12,8 @@ const connection = mongoose.connect(
 );
 
 const app = express();
+
+app.use(express.static(path.resolve(__dirname, "public")));
 
 app.use(cors());
 app.use(express.json());
